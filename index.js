@@ -25,22 +25,33 @@ function checkWhitelist(whitelist = [], packageName) {
         });
         if (data.content) {
           let packageContents;
-          packageContents = JSON.parse(
-            atob(data.content.replace(`\n`, ""))
-              .replace(/\u0010/g, "")
-              .replace(`\n@`, "")
-          );
+          try {
+            packageContents = JSON.parse(
+              atob(data.content.replace(/\n/gi, ""))
+                .replace(/\u0010/g, "")
+                .replace(`\n@`, "")
+            );
+          } catch (e) {
+            throw `Could not parse ${owner}/${repo}::${path}`;
+          }
           if (!packageContents.dependencies) {
+            console.log(
+              `No dependencies were found in ${owner}/${repo}::${path}`
+            );
             return;
           }
-          Object.keys(packageContents.dependencies).forEach(k => {
+          const theseDeps = {
+            ...packageContents.dependencies,
+            ...packageContents.devDependencies
+          };
+          Object.keys(theseDeps).forEach(k => {
             if (!checkWhitelist(whitelist, k)) {
               return;
             }
             if (!allDeps[k]) {
               allDeps[k] = {};
             }
-            allDeps[k][`${owner}/${repo}`] = packageContents.dependencies[k];
+            allDeps[k][`${owner}/${repo}`] = theseDeps[k];
           });
         } else {
           console.log(data);
