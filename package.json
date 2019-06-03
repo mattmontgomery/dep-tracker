@@ -1,0 +1,13 @@
+{
+  "name": "dep-tracker",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@octokit/rest": "^16.27.1",
+    "Base64": "^1.0.2"
+  }
+}

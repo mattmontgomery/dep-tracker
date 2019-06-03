@@ -1,0 +1,12 @@
+module.exports = {
+  repos: [
+    {
+      owner: "facebook",
+      repo: "react",
+      path: "package.json"
+    },
+    { owner: "facebook", repo: "react-native", path: "package.json" }
+  ],
+  whitelist: [/^react.+/i, "redux"],
+  token: ""
+};
