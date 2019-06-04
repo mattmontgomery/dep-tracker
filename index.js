@@ -1,6 +1,7 @@
 const { repos, token, whitelist = [] } = require("./config.js");
 const Octokit = require("@octokit/rest");
 const { atob } = require("Base64");
+const { Color } = require("./console-tools");
 
 function checkWhitelist(whitelist = [], packageName) {
   return whitelist.length
@@ -15,6 +16,12 @@ function checkWhitelist(whitelist = [], packageName) {
     auth: token
   });
   const allDeps = {};
+  console.log(
+    Color.make(
+      Color.make(" Processing ".padEnd(120, "."), "bright-white-bold"),
+      "bgBlue"
+    )
+  );
   await Promise.all(
     repos.map(async ({ owner, repo, path }) => {
       try {
@@ -36,7 +43,13 @@ function checkWhitelist(whitelist = [], packageName) {
           }
           if (!packageContents.dependencies) {
             console.log(
-              `No dependencies were found in ${owner}/${repo}::${path}`
+              Color.make(
+                Color.make(
+                  `No dependencies were found in ${owner}/${repo}::${path}`,
+                  "white"
+                ),
+                "bgRed"
+              )
             );
             return;
           }
@@ -58,7 +71,15 @@ function checkWhitelist(whitelist = [], packageName) {
         }
       } catch (e) {
         if (e.request) {
-          console.error(`Not found ${e.request.url}`);
+          console.error(
+            `${Color.make(
+              Color.make(
+                ` Not found (${owner}/${repo}::${path}) `.padEnd(120, "."),
+                "bright-white-bold"
+              ),
+              "bgRed"
+            )}`
+          );
         } else {
           console.error(e);
         }

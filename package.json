@@ -9,5 +9,8 @@
   "dependencies": {
     "@octokit/rest": "^16.27.1",
     "Base64": "^1.0.2"
+  },
+  "devDependencies": {
+    "prettier": "^1.17.1"
   }
 }
